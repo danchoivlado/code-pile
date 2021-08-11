@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -38,6 +40,9 @@ public class User extends BaseUuidEntity {
     @Convert(converter = AuthorityConverter.class)
     @Column(nullable = false, length = ValidUserAuthority.MAX_LENGTH)
     private Authority authority;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Pile> piles;
 
     @Setter
     private boolean active;

@@ -1,4 +1,6 @@
-package com.example.codepile.data.validation.annotations.composite.user;
+package com.example.codepile.data.validation.annotations.composite.pile;
+
+import com.example.codepile.data.validation.annotations.composite.user.ValidUserUsername;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -8,27 +10,22 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static com.example.codepile.data.validation.annotations.composite.MessageCodes.CODE_USER_USERNAME_BLANK;
-import static com.example.codepile.data.validation.annotations.composite.MessageCodes.CODE_USER_USERNAME_LENGTH;
+import static com.example.codepile.data.validation.annotations.composite.MessageCodes.*;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-
-
-@NotBlank(message = "{" + CODE_USER_USERNAME_BLANK + "}")
-@Size(message = "{" + CODE_USER_USERNAME_LENGTH + "}",
-        min = ValidUserUsername.MIN_LENGTH, max = ValidUserUsername.MAX_LENGTH)
+@Size(message = "{" + CODE_PILE_TITLE_LENGTH + "}", max = ValidPileTitle.MAX_LENGTH)
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
 @Documented
-public @interface ValidUserUsername {
-    int MIN_LENGTH = 1;
-    int MAX_LENGTH = 32;
+public @interface ValidPileTitle {
+    int MAX_LENGTH = 16;
 
     String message() default "";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
 }
