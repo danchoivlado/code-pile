@@ -16,7 +16,6 @@ public enum Authority implements GrantedAuthority {
     USER("user");
 
 
-
     private static final Map<String, Authority> STRING_TO_ENUM = Stream
             .of(Authority.values())
             .collect(Collectors.toUnmodifiableMap(Authority::getId, authority -> authority));

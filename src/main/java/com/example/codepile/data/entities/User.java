@@ -1,5 +1,6 @@
 package com.example.codepile.data.entities;
 
+import com.example.codepile.data.converters.AuthorityConverter;
 import com.example.codepile.data.entities.base.BaseUuidEntity;
 import com.example.codepile.data.enums.Authority;
 import com.example.codepile.data.validation.annotations.composite.user.ValidUserAuthority;
