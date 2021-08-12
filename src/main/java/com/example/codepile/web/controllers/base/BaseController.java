@@ -1,4 +1,4 @@
-package com.example.codepile.web.controllers;
+package com.example.codepile.web.controllers.base;
 
 import org.springframework.web.servlet.ModelAndView;
 

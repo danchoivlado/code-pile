@@ -1,6 +1,10 @@
 package com.example.codepile.web.controllers;
 
 import com.example.codepile.data.models.binding.User.UserRegisterBindingModel;
+import com.example.codepile.data.models.service.UserServiceModel;
+import com.example.codepile.services.UserService;
+import com.example.codepile.web.controllers.base.BaseController;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,6 +20,14 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/users")
 public class UsersControllers extends BaseController {
+
+    private ModelMapper modelMapper;
+    private UserService userService;
+
+    public UsersControllers(ModelMapper modelMapper, UserService userService) {
+        this.modelMapper = modelMapper;
+        this.userService = userService;
+    }
 
     @GetMapping("login")
     @PreAuthorize("isAnonymous()")
@@ -39,8 +51,9 @@ public class UsersControllers extends BaseController {
         if (bindingResult.hasErrors()) {
             return view("users/register");
         }
-//        UserServiceModel serviceModel = mapper.map(model, UserServiceModel.class);
-//        userService.registerUser(serviceModel);
+
+        UserServiceModel userServiceModel = modelMapper.map(model, UserServiceModel.class);
+        this.userService.registerUser(userServiceModel);
 
         return redirect("/users/login");
     }

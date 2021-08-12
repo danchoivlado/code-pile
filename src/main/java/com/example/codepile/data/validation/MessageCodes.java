@@ -18,4 +18,7 @@ public final class MessageCodes {
     public static final String INVALID_EMAIL_MESSAGE = "Invalid email.";
     public static final String NULL_EMAIL_MESSAGE = "Email cannot be null.";
     public static final String EMPTY_EMAIL_MESSAGE = "Email cannot be empty.";
+
+    public static final String DUPLICATE_USERNAME = "Username already exist!";
+    public static final String DUPLICATE_EMAIL = "Email already exist!";
 }
