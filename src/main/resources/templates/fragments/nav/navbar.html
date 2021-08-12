@@ -9,12 +9,12 @@
         </div>
 
         <th:block sec:authorize="isAnonymous()">
-            <th:block th:include="~{fragments/nav-anonymous}"></th:block>
+            <th:block th:include="~{fragments/nav/nav-anonymous}"></th:block>
         </th:block>
 
         <!--    LOG IN USER-->
         <th:block sec:authorize="isAuthenticated()">
-            <th:block th:include="~{fragments/nav-authenticated}"></th:block>
+            <th:block th:include="~{fragments/nav/nav-authenticated}"></th:block>
         </th:block>
     </nav>
 </th:block>

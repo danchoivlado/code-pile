@@ -1,0 +1,11 @@
+<th:block th:fragment>
+
+    <th:block sec:authorize="isAnonymous()">
+        <th:block th:include="~{fragments/main/main-anonymos}"></th:block>
+    </th:block>
+
+    <th:block sec:authorize="isAuthenticated()">
+        <th:block th:include="~{fragments/main/main-authenticated}"></th:block>
+    </th:block>
+
+</th:block>

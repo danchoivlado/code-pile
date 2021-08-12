@@ -5,8 +5,6 @@
             <img class="mb-1" th:src="@{/images/pile.png}" th:width="35" th:height="32" alt="header logo"/> Code-Pile
         </a>
     </div>
-
-
     <div class="collapse navbar-collapse flex-column" id="userNav">
 
         <!--                First line-->
@@ -20,7 +18,6 @@
             <li class="nav-item active">
                 <a class="nav-link" th:href="@{/orders/customer}">My Piles</a>
             </li>
-
             <th:block sec:authorize="hasRole('ROLE_MODERATOR')">
 
             </th:block>
@@ -36,17 +33,11 @@
                 </form>
             </li>
         </ul>
-        <!--                end of first line-->
-
-
-        <!--                Second line-->
         <ul class="navbar-nav justify-content-start w-100 bg-secondary px-3">
 
             <li class="nav-item active font-weight-bold">
                 <a class="nav-link" th:href="@{/bicycles/promotions}">New Pile</a>
             </li>
         </ul>
-        <!--                end of second line-->
-
     </div>
 </th:block>

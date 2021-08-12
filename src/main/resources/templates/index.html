@@ -7,11 +7,11 @@
 </head>
 <body>
 <header>
-    <th:block th:include="~{fragments/navbar}"></th:block>
+    <th:block th:include="~{fragments/nav/navbar}"></th:block>
 </header>
 <main>
-    <a class="text-white font-weight-bolder" th:href="@{/users/register}">Register</a>
-    <a class="text-white font-weight-bolder" th:href="@{/users/login}">Login!</a>
+    <th:block th:include="~{fragments/main/main}"></th:block>
+
 </main>
 <div class="fixed-bottom">
     <th:block th:include="~{fragments/footer}"></th:block>
