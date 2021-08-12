@@ -14,9 +14,11 @@ import java.util.UUID;
 public abstract class BaseUuidEntity {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(unique = true, nullable = false, insertable = false, updatable = false, columnDefinition = "BINARY(16)")
-    private UUID id;
+    @GeneratedValue(generator = "uuid-string")
+    @GenericGenerator(
+            name = "uuid-string",
+            strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(nullable = false, unique = true, updatable = false)
+    private String id;
 
 }
