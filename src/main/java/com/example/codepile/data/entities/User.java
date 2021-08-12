@@ -3,9 +3,6 @@ package com.example.codepile.data.entities;
 import com.example.codepile.data.converters.AuthorityConverter;
 import com.example.codepile.data.entities.base.BaseUuidEntity;
 import com.example.codepile.data.enums.Authority;
-import com.example.codepile.data.validation.annotations.composite.user.ValidUserAuthority;
-import com.example.codepile.data.validation.annotations.composite.user.ValidUserEncryptedPassword;
-import com.example.codepile.data.validation.annotations.composite.user.ValidUserUsername;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,24 +24,21 @@ import java.util.Set;
 )
 public class User extends BaseUuidEntity {
 
-    @ValidUserUsername
-    @Column(nullable = false, updatable = false, length = ValidUserUsername.MAX_LENGTH)
+    @Column(nullable = false, updatable = false)
     private String username;
 
-    @ValidUserEncryptedPassword
-    @Column(nullable = false, length = ValidUserEncryptedPassword.MAX_LENGTH)
+    @Column(nullable = false)
     private String password;
 
-    @Setter
-    @ValidUserAuthority
     @Convert(converter = AuthorityConverter.class)
-    @Column(nullable = false, length = ValidUserAuthority.MAX_LENGTH)
+    @Column(nullable = false)
     private Authority authority;
 
     @OneToMany(mappedBy = "user")
     private Set<Pile> piles;
 
-    @Setter
     private boolean active;
 
+    @Column(nullable = false)
+    private String email;
 }

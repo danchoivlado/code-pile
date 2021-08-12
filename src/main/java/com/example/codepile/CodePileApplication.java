@@ -15,15 +15,16 @@ public class CodePileApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(CodePileApplication.class, args);
-//        UserRepository userRepository =  ctx.getBean(UserRepository.class);
+//        UserRepository userRepository = ctx.getBean(UserRepository.class);
 //        PasswordEncoder passwordEncoder = ctx.getBean(PasswordEncoder.class);
 //        List<User> s = userRepository.findAll();
 //        User user = new User();
 //        user.setUsername("Ester2");
 //        user.setAuthority(Authority.USER);
 //        user.setActive(true);
+//        user.setEmail("dani_yordani@abv.bg");
 //        user.setPassword(passwordEncoder.encode("pass"));
 //        userRepository.saveAndFlush(user);
     }
-
 }
+

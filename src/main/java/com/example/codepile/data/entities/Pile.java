@@ -1,8 +1,6 @@
 package com.example.codepile.data.entities;
 
 import com.example.codepile.data.entities.base.BaseLongEntity;
-import com.example.codepile.data.validation.annotations.composite.pile.ValidPileTitle;
-import com.example.codepile.data.validation.annotations.composite.user.ValidUserUsername;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +19,7 @@ import javax.persistence.*;
 )
 public class Pile extends BaseLongEntity {
 
-        @ValidPileTitle
-        @Column(nullable = true, length = ValidUserUsername.MAX_LENGTH)
+        @Column(nullable = true)
         private String title;
 
         private boolean readOnly;
