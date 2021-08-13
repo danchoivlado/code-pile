@@ -1,7 +1,9 @@
 package com.example.codepile.services.services;
 
+import com.example.codepile.data.converters.AuthorityConverter;
 import com.example.codepile.data.entities.User;
 import com.example.codepile.data.enums.Authority;
+import com.example.codepile.data.models.service.ChangeUserAuthorityServiceModel;
 import com.example.codepile.data.models.service.UserServiceModel;
 import com.example.codepile.data.repositories.UserRepository;
 import com.example.codepile.error.user.EmailAlreadyExistsException;
@@ -60,12 +62,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setAuthorityUserToUser(String userId) {
-        if (!this.userRepository.existsUserById(userId)){
+    public void changeAuthorityUser(ChangeUserAuthorityServiceModel model) {
+        if (!this.userRepository.existsUserById(model.getId())){
             throw new UsernameNotFoundException("User with this ID NOT exists");
         }
-        User user = this.userRepository.findUserById(userId);
-        user.setAuthority(Authority.USER);
+        User user = this.userRepository.findUserById(model.getId());
+        AuthorityConverter authorityConverter = new AuthorityConverter();
+        Authority authority = authorityConverter.convertToEntityAttribute(model.getToRole());
+        user.setAuthority(authority);
         this.userRepository.save(user);
     }
 

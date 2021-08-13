@@ -33,12 +33,12 @@
                     <td>
                         <div class="row d-flex justify-content-center" >
                             <th:block th:if="${#lists.contains(user.authorities, 'USER') && !#lists.contains(user.authorities, 'ADMIN')}">
-                                <form  class="mr-1" data-set-role="ADMIN" method="post">
+                                <form  class="mr-1" data-set-role="admin" method="post">
                                     <button type="submit"  class="btn btn-dark btn-width">ADMIN</button>
                                 </form>
                             </th:block>
                             <th:block th:if="${#lists.contains(user.authorities, 'USER') && #lists.contains(user.authorities, 'ADMIN') && !#lists.contains(user.authorities, 'ROOT')}">
-                                <form class="mr-1"  data-set-role="USER" method="post">
+                                <form class="mr-1"  data-set-role="user" method="post">
                                     <button type="submit" class="btn btn-dark btn-width">USER</button>
                                 </form>
                             </th:block>
@@ -59,9 +59,4 @@
         src="/webjars/jquery/2.2.4/jquery.min.js"></script>
 
 <script type="text/javascript" src="/js/allUsers.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#table_id').DataTable();
-    });
-</script>
 </html>

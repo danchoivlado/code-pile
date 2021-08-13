@@ -79,12 +79,7 @@ public class UsersControllers extends BaseController {
         return super.view("users/all-users", modelAndView);
     }
 
-    @PostMapping("/set-user/{userId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String setUser(@PathVariable("userId") String userId){
-        this.userService.setAuthorityUserToUser(userId);
-        return "";
-    }
+
 
     private boolean passwordsNotMatch(String password, String confirmPassword) {
         return !password.equals(confirmPassword);

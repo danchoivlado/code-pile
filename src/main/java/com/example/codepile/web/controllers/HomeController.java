@@ -1,5 +1,6 @@
 package com.example.codepile.web.controllers;
 
+import com.example.codepile.data.models.bodyModels.UserSetAuthorityBody;
 import com.example.codepile.web.controllers.base.BaseController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,6 @@ public class HomeController extends BaseController {
     @GetMapping({"/", "/home"})
     @PreAuthorize("permitAll()")
     public ModelAndView index(Principal principal){
-
         return super.view("index");
     }
 }
