@@ -14,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.standard.inline.StandardHTMLInliner;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.example.codepile.data.validation.MessageCodes.DUPLICATE_EMAIL;
 import static com.example.codepile.data.validation.MessageCodes.DUPLICATE_USERNAME;
 
@@ -47,6 +50,22 @@ public class UserServiceImpl implements UserService {
         this.setEncodedPassword(userServiceModel);
 
         User user = modelMapper.map(userServiceModel, User.class);
+        this.userRepository.save(user);
+    }
+
+    @Override
+    public List<UserServiceModel> getAllUsers() {
+        List<User> users = this.userRepository.findAll();
+        return users.stream().map(user -> modelMapper.map(user, UserServiceModel.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public void setAuthorityUserToUser(String userId) {
+        if (!this.userRepository.existsUserById(userId)){
+            throw new UsernameNotFoundException("User with this ID NOT exists");
+        }
+        User user = this.userRepository.findUserById(userId);
+        user.setAuthority(Authority.USER);
         this.userRepository.save(user);
     }
 

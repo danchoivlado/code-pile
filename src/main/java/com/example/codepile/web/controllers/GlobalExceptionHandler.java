@@ -2,6 +2,7 @@ package com.example.codepile.web.controllers;
 
 import com.example.codepile.error.base.BaseException;
 import com.example.codepile.error.user.EmailAlreadyExistsException;
+import com.example.codepile.error.user.UserNotFoundException;
 import com.example.codepile.error.user.UsernameAlreadyExistsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +18,12 @@ public class GlobalExceptionHandler {
             EmailAlreadyExistsException.class,
             UsernameAlreadyExistsException.class})
     public ModelAndView handleAlreadyExistExceptions(BaseException exception){
+        return this.fillModelAndView(exception.getCode(),exception.getMessage());
+    }
+
+    @ExceptionHandler({
+            UserNotFoundException.class})
+    public ModelAndView handleNotFoundExceptions(BaseException exception){
         return this.fillModelAndView(exception.getCode(),exception.getMessage());
     }
 

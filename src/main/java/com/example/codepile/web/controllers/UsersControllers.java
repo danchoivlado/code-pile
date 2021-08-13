@@ -2,20 +2,22 @@ package com.example.codepile.web.controllers;
 
 import com.example.codepile.data.models.binding.User.UserRegisterBindingModel;
 import com.example.codepile.data.models.service.UserServiceModel;
+import com.example.codepile.data.models.view.UserViewModel;
 import com.example.codepile.services.UserService;
 import com.example.codepile.web.controllers.base.BaseController;
+import org.apache.catalina.LifecycleState;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/users")
@@ -57,6 +59,33 @@ public class UsersControllers extends BaseController {
 
         return redirect("/users/login");
     }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView getAll(ModelAndView modelAndView){
+        List<UserServiceModel> userServiceModels = this.userService.getAllUsers();
+        List<UserViewModel> viewModels = userServiceModels.stream()
+                .map(user -> {
+                    UserViewModel userViewModel = modelMapper.map(user,UserViewModel.class);
+                    userViewModel.setAuthorities(
+                            user.getAuthority()
+                                    .getGrantedAuthorities()
+                                    .stream().
+                                    map(authority -> authority.name()).collect(Collectors.toList()));
+                    return userViewModel;
+                }).collect(Collectors.toList());
+        modelAndView.addObject("users",viewModels);
+
+        return super.view("users/all-users", modelAndView);
+    }
+
+    @PostMapping("/set-user/{userId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String setUser(@PathVariable("userId") String userId){
+        this.userService.setAuthorityUserToUser(userId);
+        return "";
+    }
+
     private boolean passwordsNotMatch(String password, String confirmPassword) {
         return !password.equals(confirmPassword);
     }

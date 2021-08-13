@@ -1,3 +1,14 @@
 <th:block th:fragment>
     Lognat si e pederas
+    <button type="button" id="bth-search"
+            class="btn btn-primary btn-lg">Search
+    </button>
+<input type="hidden" id="hid" th:value="${_csrf.token}">
+    <span th:text="${_csrf.parameterName}"> </span>
+    <span th:text="${_csrf.headerName}"> </span>
+
 </th:block>
+<script type="text/javascript"
+        src="webjars/jquery/2.2.4/jquery.min.js"></script>
+
+<script type="text/javascript" src="js/main.js"></script>
