@@ -45,8 +45,13 @@
                 <hr class="hr-2 bg-dark">
                 <div class="button-holder d-flex justify-content-center">
                     <button type="submit" class="btn btn-success">Edit</button>
-                </div>
+
             </form>
+            <form th:action="@{/users/new-password}">
+
+                <button type="submit" class="btn btn-secondary">Change Password</button>
+            </form>
+        </div>
         </div>
     </div>
 </main>

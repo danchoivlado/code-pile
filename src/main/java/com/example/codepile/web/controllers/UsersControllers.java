@@ -1,14 +1,17 @@
 package com.example.codepile.web.controllers;
 
 import com.example.codepile.data.models.binding.user.EditProfieBindingModel;
+import com.example.codepile.data.models.binding.user.NewPasswordBindingPassword;
 import com.example.codepile.data.models.binding.user.UserRegisterBindingModel;
 import com.example.codepile.data.models.service.user.EditProfileServiceModel;
+import com.example.codepile.data.models.service.user.NewPasswordServiceModel;
 import com.example.codepile.data.models.service.user.ProfileServiceModel;
 import com.example.codepile.data.models.service.user.UserServiceModel;
 import com.example.codepile.data.models.view.ProfileViewModel;
 import com.example.codepile.data.models.view.UserViewModel;
 import com.example.codepile.services.UserService;
 import com.example.codepile.web.controllers.base.BaseController;
+import org.dom4j.rule.Mode;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -115,6 +118,31 @@ public class UsersControllers extends BaseController {
         return super.redirect("/users/profile");
     }
 
+    @GetMapping("/new-password")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView changePassword(@ModelAttribute("model")NewPasswordBindingPassword newPasswordBindingPassword){
+        return super.view("/users/new-password");
+    }
+
+    @PostMapping("/new-password")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView changePasswordConfirm(@Valid @ModelAttribute(name = "model") NewPasswordBindingPassword bindingModel,
+                                           BindingResult bindingResult, Principal principal) {
+
+        if (this.passwordsNotMatch(bindingModel.getPassword(), bindingModel.getConfirmPassword())) {
+            bindingResult.addError(new FieldError("model", "password", "Passwords don't match."));
+        }
+
+        if (bindingResult.hasErrors()) {
+            return super.view("users/new-password");
+        }
+
+        NewPasswordServiceModel serviceModel = modelMapper.map(bindingModel, NewPasswordServiceModel.class);
+        serviceModel.setUsername(principal.getName());
+        this.userService.changePassword(serviceModel);
+
+        return super.redirect("/users/profile");
+    }
 
     private boolean passwordsNotMatch(String password, String confirmPassword) {
         return !password.equals(confirmPassword);

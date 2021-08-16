@@ -4,10 +4,7 @@ import com.example.codepile.data.converters.AuthorityConverter;
 import com.example.codepile.data.entities.User;
 import com.example.codepile.data.enums.Authority;
 import com.example.codepile.data.models.binding.user.EditProfieBindingModel;
-import com.example.codepile.data.models.service.user.ChangeUserAuthorityServiceModel;
-import com.example.codepile.data.models.service.user.EditProfileServiceModel;
-import com.example.codepile.data.models.service.user.ProfileServiceModel;
-import com.example.codepile.data.models.service.user.UserServiceModel;
+import com.example.codepile.data.models.service.user.*;
 import com.example.codepile.data.repositories.UserRepository;
 import com.example.codepile.error.user.EmailAlreadyExistsException;
 import com.example.codepile.error.user.PasswordDontMatchException;
@@ -78,7 +75,7 @@ public class UserServiceImpl implements UserService {
     public ProfileServiceModel getProfile(String username) {
         this.checkIfUserExistsWithUserName(username);
         User user = this.userRepository.findUserByUsername(username);
-        return modelMapper.map(user,ProfileServiceModel.class);
+        return modelMapper.map(user, ProfileServiceModel.class);
     }
 
     @Override
@@ -99,63 +96,72 @@ public class UserServiceImpl implements UserService {
         this.userRepository.save(user);
     }
 
+    @Override
+    public void changePassword(NewPasswordServiceModel serviceModel) {
+        this.checkIfUserExistsWithUserName(serviceModel.getUsername());
+        User user = this.userRepository.findUserByUsername(serviceModel.getUsername());
+        this.checkPasswordsMatch(serviceModel.getOldPassword(), user);
+        String encodedInputPassword = this.passwordEncoder.encode(serviceModel.getPassword());
+        user.setPassword(encodedInputPassword);
+        this.userRepository.save(user);
+    }
 
-    private void setEncodedPassword(UserServiceModel userServiceModel){
+
+    private void setEncodedPassword(UserServiceModel userServiceModel) {
         String passsword = userServiceModel.getPassword();
         userServiceModel.setPassword(passwordEncoder.encode(passsword));
     }
 
-    private void setProperAuthority(UserServiceModel userServiceModel){
+    private void setProperAuthority(UserServiceModel userServiceModel) {
 
         Authority authority = null;
 
-        if (this.userRepository.findAll().size() > 0){
-            authority =Authority.USER;
-        }
-        else {
+        if (this.userRepository.findAll().size() > 0) {
+            authority = Authority.USER;
+        } else {
             authority = Authority.ROOT;
         }
 
         userServiceModel.setAuthority(authority);
     }
 
-    private void checkIfUserExistByUsernameAndEmail(String username, String email){
+    private void checkIfUserExistByUsernameAndEmail(String username, String email) {
         boolean usernameAlreadyExists = this.userRepository.existsUserByUsername(username);
-       if (usernameAlreadyExists){
-           throw new UsernameAlreadyExistsException(DUPLICATE_USERNAME);
-       }
+        if (usernameAlreadyExists) {
+            throw new UsernameAlreadyExistsException(DUPLICATE_USERNAME);
+        }
 
         boolean emailAlreadyExists = this.userRepository.existsUserByEmail(email);
 
-       if (emailAlreadyExists){
-           throw new EmailAlreadyExistsException(DUPLICATE_EMAIL);
-       }
+        if (emailAlreadyExists) {
+            throw new EmailAlreadyExistsException(DUPLICATE_EMAIL);
+        }
     }
 
-    private void checkIfUserExistsWithUserName(String username){
+    private void checkIfUserExistsWithUserName(String username) {
         boolean existsUserWithUsrername = this.userRepository.existsUserByUsername(username);
-        if (!existsUserWithUsrername){
+        if (!existsUserWithUsrername) {
             throw new UsernameNotFoundException(USER_USERNAME_NOTFOUND);
         }
     }
 
-    private void checkIfUserExistsWithId(String id){
+    private void checkIfUserExistsWithId(String id) {
         boolean existsById = this.userRepository.existsById(id);
-        if (!existsById){
+        if (!existsById) {
             throw new UsernameNotFoundException(USER_ID_NOTFOUND);
         }
     }
 
-    private void checkPasswordsMatch(String inputPassword, User user){
-        if (!passwordEncoder.matches(inputPassword, user.getPassword())){
+    private void checkPasswordsMatch(String inputPassword, User user) {
+        if (!passwordEncoder.matches(inputPassword, user.getPassword())) {
             throw new PasswordDontMatchException(PASSWORD_DONT_MATCH);
         }
     }
 
-    private void checkIfEmailIExists(String oldEmail, String newEmail){
-        if (!oldEmail.equals(newEmail)){
+    private void checkIfEmailIExists(String oldEmail, String newEmail) {
+        if (!oldEmail.equals(newEmail)) {
             boolean userExistsWithEmail = this.userRepository.existsUserByEmail(newEmail);
-            if (userExistsWithEmail){
+            if (userExistsWithEmail) {
                 throw new EmailAlreadyExistsException(DUPLICATE_EMAIL);
             }
         }
