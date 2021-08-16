@@ -1,7 +1,7 @@
 package com.example.codepile.web.controllers;
 
 import com.example.codepile.data.models.bodyModels.UserSetAuthorityBody;
-import com.example.codepile.data.models.service.ChangeUserAuthorityServiceModel;
+import com.example.codepile.data.models.service.user.ChangeUserAuthorityServiceModel;
 import com.example.codepile.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;

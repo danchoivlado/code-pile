@@ -1,4 +1,4 @@
-package com.example.codepile.data.models.service;
+package com.example.codepile.data.models.service.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

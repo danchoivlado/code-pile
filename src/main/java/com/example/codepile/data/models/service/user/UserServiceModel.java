@@ -1,4 +1,4 @@
-package com.example.codepile.data.models.service;
+package com.example.codepile.data.models.service.user;
 
 import com.example.codepile.data.enums.Authority;
 import com.example.codepile.data.models.service.base.UIDBaseServiceModel;

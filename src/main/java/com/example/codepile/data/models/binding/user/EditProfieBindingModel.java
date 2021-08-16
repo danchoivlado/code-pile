@@ -1,4 +1,4 @@
-package com.example.codepile.data.models.binding.User;
+package com.example.codepile.data.models.binding.user;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +12,7 @@ import static com.example.codepile.data.validation.MessageCodes.*;
 
 @Getter
 @Setter
-
-public class UserRegisterBindingModel {
+public class EditProfieBindingModel {
 
     @NotNull(message = NULL_USERNAME_MESSAGE)
     @NotEmpty(message = EMPTY_USERNAME_MESSAGE)
@@ -24,11 +23,6 @@ public class UserRegisterBindingModel {
     @NotEmpty(message = EMPTY_PASSWORD_MESSAGE)
     @Length(min = 4, max = 20, message = INVALID_PASSWORD_LENGTH_MESSAGE)
     private String password;
-
-    @NotNull(message = NULL_PASSWORD_MESSAGE)
-    @NotEmpty(message = EMPTY_PASSWORD_MESSAGE)
-    @Length(min = 4, max = 20, message = INVALID_PASSWORD_LENGTH_MESSAGE)
-    private String confirmPassword;
 
     @NotNull(message = NULL_EMAIL_MESSAGE)
     @NotEmpty(message = EMPTY_EMAIL_MESSAGE)

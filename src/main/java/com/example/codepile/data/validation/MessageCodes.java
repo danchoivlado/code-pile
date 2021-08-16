@@ -21,4 +21,7 @@ public final class MessageCodes {
 
     public static final String DUPLICATE_USERNAME = "Username already exist!";
     public static final String DUPLICATE_EMAIL = "Email already exist!";
+    public static final String USER_USERNAME_NOTFOUND = "User with this username doesn't exists";
+    public static final String USER_ID_NOTFOUND = "User with this ID doesn't exists";
+    public static final String PASSWORD_DONT_MATCH = "Password is incorrect";
 }

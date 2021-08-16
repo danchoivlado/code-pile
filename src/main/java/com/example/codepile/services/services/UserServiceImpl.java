@@ -3,25 +3,27 @@ package com.example.codepile.services.services;
 import com.example.codepile.data.converters.AuthorityConverter;
 import com.example.codepile.data.entities.User;
 import com.example.codepile.data.enums.Authority;
-import com.example.codepile.data.models.service.ChangeUserAuthorityServiceModel;
-import com.example.codepile.data.models.service.ProfileServiceModel;
-import com.example.codepile.data.models.service.UserServiceModel;
+import com.example.codepile.data.models.binding.user.EditProfieBindingModel;
+import com.example.codepile.data.models.service.user.ChangeUserAuthorityServiceModel;
+import com.example.codepile.data.models.service.user.EditProfileServiceModel;
+import com.example.codepile.data.models.service.user.ProfileServiceModel;
+import com.example.codepile.data.models.service.user.UserServiceModel;
 import com.example.codepile.data.repositories.UserRepository;
 import com.example.codepile.error.user.EmailAlreadyExistsException;
+import com.example.codepile.error.user.PasswordDontMatchException;
 import com.example.codepile.error.user.UsernameAlreadyExistsException;
 import com.example.codepile.services.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.standard.inline.StandardHTMLInliner;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.codepile.data.validation.MessageCodes.DUPLICATE_EMAIL;
-import static com.example.codepile.data.validation.MessageCodes.DUPLICATE_USERNAME;
+import static com.example.codepile.data.validation.MessageCodes.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -64,9 +66,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changeAuthorityUser(ChangeUserAuthorityServiceModel model) {
-        if (!this.userRepository.existsUserById(model.getId())){
-            throw new UsernameNotFoundException("User with this ID NOT exists");
-        }
+        this.checkIfUserExistsWithId(model.getId());
         User user = this.userRepository.findUserById(model.getId());
         AuthorityConverter authorityConverter = new AuthorityConverter();
         Authority authority = authorityConverter.convertToEntityAttribute(model.getToRole());
@@ -76,12 +76,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProfileServiceModel getProfile(String username) {
-        boolean existsUserWithUsrername = this.userRepository.existsUserByUsername(username);
-        if (!existsUserWithUsrername){
-            throw new UsernameNotFoundException("no user with this username");
-        }
+        this.checkIfUserExistsWithUserName(username);
         User user = this.userRepository.findUserByUsername(username);
         return modelMapper.map(user,ProfileServiceModel.class);
+    }
+
+    @Override
+    public EditProfieBindingModel getEditProfile(String username) {
+        this.checkIfUserExistsWithUserName(username);
+        User user = this.userRepository.findUserByUsername(username);
+        return modelMapper.map(user, EditProfieBindingModel.class);
+    }
+
+    @Override
+    public void editProfile(EditProfileServiceModel model) {
+        this.checkIfUserExistsWithUserName(model.getUsername());
+        User user = this.userRepository.findUserByUsername(model.getUsername());
+
+        this.checkPasswordsMatch(model.getPassword(), user);
+        this.checkIfEmailIExists(user.getEmail(), model.getEmail());
+        user.setEmail(model.getEmail());
+        this.userRepository.save(user);
     }
 
 
@@ -115,5 +130,34 @@ public class UserServiceImpl implements UserService {
        if (emailAlreadyExists){
            throw new EmailAlreadyExistsException(DUPLICATE_EMAIL);
        }
+    }
+
+    private void checkIfUserExistsWithUserName(String username){
+        boolean existsUserWithUsrername = this.userRepository.existsUserByUsername(username);
+        if (!existsUserWithUsrername){
+            throw new UsernameNotFoundException(USER_USERNAME_NOTFOUND);
+        }
+    }
+
+    private void checkIfUserExistsWithId(String id){
+        boolean existsById = this.userRepository.existsById(id);
+        if (!existsById){
+            throw new UsernameNotFoundException(USER_ID_NOTFOUND);
+        }
+    }
+
+    private void checkPasswordsMatch(String inputPassword, User user){
+        if (!passwordEncoder.matches(inputPassword, user.getPassword())){
+            throw new PasswordDontMatchException(PASSWORD_DONT_MATCH);
+        }
+    }
+
+    private void checkIfEmailIExists(String oldEmail, String newEmail){
+        if (!oldEmail.equals(newEmail)){
+            boolean userExistsWithEmail = this.userRepository.existsUserByEmail(newEmail);
+            if (userExistsWithEmail){
+                throw new EmailAlreadyExistsException(DUPLICATE_EMAIL);
+            }
+        }
     }
 }
