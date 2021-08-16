@@ -1,7 +1,9 @@
 package com.example.codepile.web.controllers;
 
 import com.example.codepile.data.models.binding.User.UserRegisterBindingModel;
+import com.example.codepile.data.models.service.ProfileServiceModel;
 import com.example.codepile.data.models.service.UserServiceModel;
+import com.example.codepile.data.models.view.ProfileViewModel;
 import com.example.codepile.data.models.view.UserViewModel;
 import com.example.codepile.services.UserService;
 import com.example.codepile.web.controllers.base.BaseController;
@@ -9,6 +11,7 @@ import org.apache.catalina.LifecycleState;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -79,6 +82,14 @@ public class UsersControllers extends BaseController {
         return super.view("users/all-users", modelAndView);
     }
 
+    @GetMapping("/profile")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView getProfile(Principal principal, ModelAndView modelAndView){
+        ProfileServiceModel profileServiceModel = this.userService.getProfile(principal.getName());
+        ProfileViewModel model = modelMapper.map(profileServiceModel, ProfileViewModel.class);
+        modelAndView.addObject("model", model);
+        return super.view("users/profile",modelAndView);
+    }
 
 
     private boolean passwordsNotMatch(String password, String confirmPassword) {

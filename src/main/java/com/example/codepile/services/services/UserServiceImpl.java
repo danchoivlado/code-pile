@@ -4,6 +4,7 @@ import com.example.codepile.data.converters.AuthorityConverter;
 import com.example.codepile.data.entities.User;
 import com.example.codepile.data.enums.Authority;
 import com.example.codepile.data.models.service.ChangeUserAuthorityServiceModel;
+import com.example.codepile.data.models.service.ProfileServiceModel;
 import com.example.codepile.data.models.service.UserServiceModel;
 import com.example.codepile.data.repositories.UserRepository;
 import com.example.codepile.error.user.EmailAlreadyExistsException;
@@ -71,6 +72,16 @@ public class UserServiceImpl implements UserService {
         Authority authority = authorityConverter.convertToEntityAttribute(model.getToRole());
         user.setAuthority(authority);
         this.userRepository.save(user);
+    }
+
+    @Override
+    public ProfileServiceModel getProfile(String username) {
+        boolean existsUserWithUsrername = this.userRepository.existsUserByUsername(username);
+        if (!existsUserWithUsrername){
+            throw new UsernameNotFoundException("no user with this username");
+        }
+        User user = this.userRepository.findUserByUsername(username);
+        return modelMapper.map(user,ProfileServiceModel.class);
     }
 
 
