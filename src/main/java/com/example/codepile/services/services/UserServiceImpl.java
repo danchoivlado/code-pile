@@ -106,6 +106,11 @@ public class UserServiceImpl implements UserService {
         this.userRepository.save(user);
     }
 
+    @Override
+    public boolean checkUserExistsWithUsername(String username) {
+        return this.userRepository.existsUserByUsername(username);
+    }
+
 
     private void setEncodedPassword(UserServiceModel userServiceModel) {
         String passsword = userServiceModel.getPassword();

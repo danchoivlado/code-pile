@@ -37,6 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/js/**", "/css/**", "/images/**").permitAll()
                 .antMatchers("/", "/users/register", "/users/login").anonymous()
+                .antMatchers("/api/users/checkUserExistsWithUsername").anonymous()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

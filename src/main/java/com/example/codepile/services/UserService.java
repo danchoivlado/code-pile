@@ -15,4 +15,5 @@ public interface UserService extends UserDetailsService {
     EditProfieBindingModel getEditProfile(String username);
     void editProfile(EditProfileServiceModel profileServiceModel);
     void changePassword(NewPasswordServiceModel serviceModel);
+    boolean checkUserExistsWithUsername(String username);
 }

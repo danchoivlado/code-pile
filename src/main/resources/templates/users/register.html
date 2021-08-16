@@ -19,6 +19,16 @@
             <input required type="text" class="form-control" id="username"
                    placeholder="Username..." name="username" th:field="*{username}">
             <small th:each="error : ${#fields.errors('username')}" th:utext="${error}  + '&lt;br /&gt;'"></small>
+            <br>
+            <div class="form-row">
+                <div class="col-md-3" id="check-button">
+                    <a class="btn btn-info btn-sm">Check</a>
+                </div>
+                <div class="col-md-9" id="check-response">
+
+                </div>
+            </div>
+
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'text-danger'">
             <label for="password" class="font-weight-bold">Password</label>
@@ -47,5 +57,9 @@
 <div>
     <th:block th:include="~{fragments/footer}"></th:block>
 </div>
+<script type="text/javascript"
+        src="/webjars/jquery/2.2.4/jquery.min.js"></script>
+
+<script type="text/javascript" src="/js/register.js"></script>
 </body>
 </html>
