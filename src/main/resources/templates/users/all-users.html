@@ -25,7 +25,7 @@
             <tbody>
             <th:block th:each="user, iter : ${users}">
                 <tr>
-                    <input type="hidden" id="userId" th:value="${user.id}">
+<!--                    <input type="hidden" id="userId" th:value="${user.id}">-->
                     <th th:text="${iter.index + 1}"></th>
                     <td th:text="${user.username}"></td>
                     <td th:text="${user.email}"></td>
@@ -34,11 +34,13 @@
                         <div class="row d-flex justify-content-center" >
                             <th:block th:if="${#lists.contains(user.authorities, 'USER') && !#lists.contains(user.authorities, 'ADMIN')}">
                                 <form  class="mr-1" data-set-role="admin" method="post">
+                                    <input type="hidden" class="user-id" th:value="${user.id}">
                                     <button type="submit"  class="btn btn-dark btn-width">ADMIN</button>
                                 </form>
                             </th:block>
                             <th:block th:if="${#lists.contains(user.authorities, 'USER') && #lists.contains(user.authorities, 'ADMIN') && !#lists.contains(user.authorities, 'ROOT')}">
                                 <form class="mr-1"  data-set-role="user" method="post">
+                                    <input type="hidden" class="user-id" th:value="${user.id}">
                                     <button type="submit" class="btn btn-dark btn-width">USER</button>
                                 </form>
                             </th:block>

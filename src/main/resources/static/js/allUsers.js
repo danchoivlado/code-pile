@@ -3,17 +3,15 @@ $(document).ready(function () {
     $(".mr-1").submit(function (event) {
 
         const changeToRole = $(this).attr('data-set-role');
-        //stop submit the form, we will post it manually.
+        const userId = this.getElementsByClassName('user-id')[0].value;
         event.preventDefault();
-        fire_ajax_submit(changeToRole);
+        fire_ajax_submit(changeToRole, userId);
 
     });
 
 });
 
-function fire_ajax_submit(changeToRole){
-
-    const userId = $("#userId").val();
+function fire_ajax_submit(changeToRole, userId){
     const token =$('input[name="_csrf"]').val();
 
     let data = {};
@@ -32,7 +30,7 @@ function fire_ajax_submit(changeToRole){
         cache: false,
         timeout: 600000,
         success: function (data) {
-            
+
 
         }
     });
