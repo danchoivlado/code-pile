@@ -73,6 +73,14 @@ The navbar toggle appears at this breakpoint */
     background-position: center;
 }
 
+.title-select{
+    margin-right: 10px;
+}
+
+.code-title{
+    width: 75%;
+}
+
 .login-heading {
     font-weight: 300;
 }
