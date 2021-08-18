@@ -26,10 +26,12 @@
                     <label for="pile-language" class="col-sm-6 col-form-label   ">Select a language:</label>
                     <div class="col-sm-6">
                         <select class="custom-select" id="pile-language">
-                            <option selected>Choose...</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            <option selected value="javascript">JavaScript</option>
+                            <th:block th:each="mode : ${aceModes}">
+                                <option th:value="${mode.id}">[[${mode.name}]]</option>
+<!--                            <option value="java">Java</option>-->
+<!--                            <option value="html">Html</option>-->
+<!--                            <option value="3">Three</option>-->
                         </select>
                     </div>
                 </div>
@@ -48,6 +50,7 @@
 <script src="/js/ace-editor/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="/js/ace-editor/src-min/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 <script src="/js/ace-editor/src-min/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="/webjars/jquery/2.2.4/jquery.min.js"></script>
 
 <!-- Custom Scripts -->
 <script src="js/ace-editor/editor.js"></script>
