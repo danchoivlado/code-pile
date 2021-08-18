@@ -7,7 +7,13 @@ import java.util.Locale;
 public enum AceMode {
 
     HTML("html"),
-    JAVA("java");
+    JAVA("java"),
+    PYTHON("python"),
+    CSS("css"),
+    SQL("sql"),
+    CSHARP("csharp"),
+    RUST("rust"),
+    PERL("perl");
 
     private final String id;
     private final String name;
