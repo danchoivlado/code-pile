@@ -8,7 +8,7 @@
 <body>
 <header>
     <th:block th:include="~{fragments/nav/navbar}"></th:block>
-    <link rel="stylesheet" href="css/editor-styles.css">
+    <link rel="stylesheet" href="/css/editor-styles.css">
 </header>
 <main class="mt-3">
     <div class="container">
@@ -32,12 +32,14 @@
 <!--                            <option value="java">Java</option>-->
 <!--                            <option value="html">Html</option>-->
 <!--                            <option value="3">Three</option>-->
+                            </th:block>
                         </select>
                     </div>
                 </div>
             </div>
         </div>
-
+        <button id="connect" class="btn btn-default" type="submit">Connect</button>
+        <button id="sub" class="btn btn-default" type="submit">Sub</button>
 
 
         <pre id="editor"></pre>
@@ -51,8 +53,10 @@
 <script src="/js/ace-editor/src-min/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 <script src="/js/ace-editor/src-min/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="/webjars/jquery/2.2.4/jquery.min.js"></script>
-
+<script type="text/javascript" src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
+<script type="text/javascript" src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
 <!-- Custom Scripts -->
-<script src="js/ace-editor/editor.js"></script>
+<script src="/js/ace-editor/editor.js"></script>
+<script src="/js/pile.js"></script>
 </body>
 </html>
