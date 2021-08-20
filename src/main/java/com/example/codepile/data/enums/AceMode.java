@@ -3,6 +3,9 @@ package com.example.codepile.data.enums;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum AceMode {
 
@@ -13,7 +16,8 @@ public enum AceMode {
     SQL("sql"),
     CSHARP("csharp"),
     RUST("rust"),
-    PERL("perl");
+    PERL("perl"),
+    JAVASCRIPT("javascript");
 
     private final String id;
     private final String name;
@@ -22,6 +26,14 @@ public enum AceMode {
         this.id = id;
         this.name = convertIdToName(id);
     }
+
+    public static AceMode fromId(String id) {
+        return STRING_TO_ENUM.get(id);
+    }
+
+    private static final Map<String, AceMode> STRING_TO_ENUM = Stream
+            .of(AceMode.values())
+            .collect(Collectors.toUnmodifiableMap(AceMode::getId, aceMode -> aceMode));
 
     private static final List<AceMode> ACE_MODES_LIST = Arrays.asList(AceMode.values());
 
