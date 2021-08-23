@@ -58,8 +58,9 @@ public class PileServiceImpl implements PileService {
 
         User createdBy = this.userRepository.findUserByUsername(byUserWithUsername);
         generatedPile.setUser(createdBy);
-        generatedPile.setId(alphanumericString.getRandomAlphanumericString());
-
+        String id = alphanumericString.getRandomAlphanumericString();
+        generatedPile.setId(id);
+        generatedPile.setTitle(id);
         this.pileRepository.save(generatedPile);
         return new PileCreateServiceModel(generatedPile.getId());
     }
