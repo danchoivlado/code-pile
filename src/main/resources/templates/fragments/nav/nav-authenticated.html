@@ -46,7 +46,9 @@
         <ul class="navbar-nav justify-content-start w-100 bg-secondary px-3">
 
             <li class="nav-item active font-weight-bold">
-                <a class="nav-link" th:href="@{/bicycles/promotions}">New Pile</a>
+                <form th:action="@{/pile}" th:method="post">
+                    <button type="submit" class="btn btn-secondary">New Pile</button>
+                </form>
             </li>
         </ul>
     </div>

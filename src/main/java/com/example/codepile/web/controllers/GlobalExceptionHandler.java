@@ -1,6 +1,7 @@
 package com.example.codepile.web.controllers;
 
 import com.example.codepile.error.base.BaseException;
+import com.example.codepile.error.pile.PileNotFoundException;
 import com.example.codepile.error.user.EmailAlreadyExistsException;
 import com.example.codepile.error.user.UserNotFoundException;
 import com.example.codepile.error.user.UsernameAlreadyExistsException;
@@ -22,7 +23,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserNotFoundException.class})
+            UserNotFoundException.class,
+            PileNotFoundException.class})
     public ModelAndView handleNotFoundExceptions(BaseException exception){
         return this.fillModelAndView(exception.getCode(),exception.getMessage());
     }

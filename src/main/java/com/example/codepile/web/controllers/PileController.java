@@ -1,6 +1,7 @@
 package com.example.codepile.web.controllers;
 
 import com.example.codepile.data.enums.AceMode;
+import com.example.codepile.data.models.service.pile.PileCreateServiceModel;
 import com.example.codepile.data.models.service.pile.PileServiceModel;
 import com.example.codepile.data.models.view.PileViewModel;
 import com.example.codepile.services.PileService;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
@@ -18,6 +20,8 @@ import java.security.Principal;
 @PreAuthorize("isAuthenticated()")
 public class PileController extends BaseController {
     private static final String aceModeObjectName = "aceModes";
+    private static final String defaultTitleObjectName = "defaultTitle";
+    private static final String defaultLanguageObjectName = "defaultLanguage";
     private PileService pileService;
     private ModelMapper modelMapper;
 
@@ -27,6 +31,7 @@ public class PileController extends BaseController {
     }
 
     @GetMapping("/pile/{pileId}")
+    @PreAuthorize("isAuthenticated()")
     public ModelAndView getPile(Principal principal, ModelAndView modelAndView, @PathVariable() String pileId){
         PileServiceModel pileServiceModel = this.pileService.getPileWithId(pileId);
 
@@ -35,8 +40,17 @@ public class PileController extends BaseController {
         pileViewModel.setUserUserId(pileServiceModel.getUser().getId());
 
         modelAndView.addObject(aceModeObjectName, AceMode.getAceModesList());
-        modelAndView.addObject(aceModeObjectName, AceMode.getAceModesList());
+        modelAndView.addObject(defaultTitleObjectName, pileId);
+        modelAndView.addObject(defaultLanguageObjectName, pileViewModel.getAceMode().getId());
 
         return super.view("pile",modelAndView);
     }
+
+    @PostMapping("/pile")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView createPile(Principal principal){
+        PileCreateServiceModel serviceModel = this.pileService.createPile(principal.getName());
+        return super.redirect("/pile/"+serviceModel.getPileId());
+    }
+
 }

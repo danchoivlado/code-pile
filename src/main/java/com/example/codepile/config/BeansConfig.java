@@ -36,7 +36,7 @@ public class BeansConfig {
         return new RandomAlphanumericStringGenerator();
     }
 
-    @Bean
+    @Bean(name = "pile")
     public PileFactory pileFactory() {
         PileFactory factory = new PileFactory();
         factory.setFactoryId(7070);
