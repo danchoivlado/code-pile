@@ -10,4 +10,6 @@ public interface PileService {
     PileCreateServiceModel createPile(String byUserWithUsername);
     MyPilesServiceViewModel getMyPiles(String byUserWithUsername);
     void deletePileWithId(String pileId);
+    void changeTitle(String pileId, String title);
+    void changeLanguage(String pileId, String language);
 }

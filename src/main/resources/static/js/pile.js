@@ -1,39 +1,36 @@
-var stompClient = null;
-
-function connect() {
-    var socket = new SockJS('/gs-guide-websocket');
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame);
-    });
-}
-
-function disconnect() {
-    if (stompClient !== null) {
-        stompClient.disconnect();
-    }
-    setConnected(false);
-    console.log("Disconnected");
-}
-
-function sub(){
-    stompClient.subscribe('/topic/titleRecieve', function (title) {
-        changeTitle(JSON.parse(title.body).content);
-    });
-}
-
-function changeTitle(titleContent){
-    $( "#pile-tittle").val(titleContent);
-}
-
-function sendTitle(){
-    console.log(JSON.stringify({'content': $("#title").val()}))
-    stompClient.send("/app/titleSend",{}, JSON.stringify({'content': $("#pile-tittle").val()}));
-}
-
-$(function () {
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#sub" ).click(function() { sub(); });
-    $( "#pile-tittle" ).change(function() { sendTitle(); });
+$(document).ready(function () {
+    pileLib.initListeners()
 });
+
+let pileLib = {
+    initListeners() {
+        $("#pile-language").change(function (event) {
+            saveLanguageChange(this.value)
+        })
+    }
+}
+
+function saveLanguageChange(selectedLanguage) {
+    const token = $('input[name="_csrf"]').val();
+
+    let data = {};
+    data['pileId'] = $("#pile-id").val();
+    data['language'] = selectedLanguage
+
+    $.ajax({
+        type: "POST",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-CSRF-TOKEN', token);
+        },
+        contentType: "application/json",
+        url: "/api/pile/changeLanguage",
+        data: JSON.stringify(data),
+        dataType: 'json',
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            console.log("huq mi qnko")
+
+        }
+    });
+}

@@ -2,6 +2,7 @@ package com.example.codepile.services.services;
 
 import com.example.codepile.data.entities.Pile;
 import com.example.codepile.data.entities.User;
+import com.example.codepile.data.enums.AceMode;
 import com.example.codepile.data.factories.PileFactory;
 import com.example.codepile.data.models.service.pile.MyPileServiceViewModel;
 import com.example.codepile.data.models.service.pile.MyPilesServiceViewModel;
@@ -80,6 +81,22 @@ public class PileServiceImpl implements PileService {
         this.checkIfPileExistsWithId(pileId);
         Pile pile = this.pileRepository.getById(pileId);
         this.pileRepository.delete(pile);
+    }
+
+    @Override
+    public void changeTitle(String pileId, String title) {
+        this.checkIfPileExistsWithId(pileId);
+        Pile pile = this.pileRepository.findPileById(pileId);
+        pile.setTitle(title);
+        this.pileRepository.save(pile);
+    }
+
+    @Override
+    public void changeLanguage(String pileId, String language) {
+        this.checkIfPileExistsWithId(pileId);
+        Pile pile = this.pileRepository.findPileById(pileId);
+        pile.setAceMode(AceMode.fromId(language));
+        this.pileRepository.save(pile);
     }
 
     private void checkIfUserExistsWithUserName(String username) {

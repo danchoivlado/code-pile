@@ -17,7 +17,8 @@
                 <div class="form-group row">
                     <label for="pile-tittle" class="col-sm-2 col-form-label">Title:</label>
                     <div class="col-sm-10">
-                        <input type="text" th:value="${defaultTitle}" class="form-control" id="pile-tittle" placeholder="Title">
+                        <input type="text" th:value="${pile.title}" class="form-control" id="pile-tittle" placeholder="Title">
+                        <input type="hidden" th:value="${pile.id}" id="pile-id">
                     </div>
                 </div>
             </div>
@@ -26,8 +27,8 @@
                     <label for="pile-language" class="col-sm-6 col-form-label   ">Select a language:</label>
                     <div class="col-sm-6">
                         <select class="custom-select" id="pile-language">
-                            <option selected th:value="${defaultLanguage}">JavaScript</option>
-                            <th:block th:each="mode : ${aceModes}">
+                            <option selected th:value="${pile.aceMode.id}">[[${pile.aceMode.name}]]</option>
+                            <th:block th:each="mode : ${pile.aceModes}">
                                 <option th:value="${mode.id}">[[${mode.name}]]</option>
 <!--                            <option value="java">Java</option>-->
 <!--                            <option value="html">Html</option>-->

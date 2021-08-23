@@ -1,13 +1,9 @@
 $(document).ready(function () {
 
     $("#check-button").click(function (event) {
-
-        // const changeToRole = $(this).attr('data-set-role');
-        // const userId = this.getElementsByClassName('user-id')[0].value;
         const username = $("#username").val();
         event.preventDefault();
         fire_ajax_click(username);
-
     });
 
 });

@@ -9,6 +9,7 @@ import com.example.codepile.data.models.view.piles.MyPilesViewModel;
 import com.example.codepile.data.models.view.piles.PileViewModel;
 import com.example.codepile.services.PileService;
 import com.example.codepile.web.controllers.base.BaseController;
+import org.hibernate.property.access.internal.PropertyAccessStrategyNoopImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ public class PileController extends BaseController {
     private static final String defaultTitleObjectName = "defaultTitle";
     private static final String defaultLanguageObjectName = "defaultLanguage";
     private static final String myPilesObjectName = "myPiles";
+    private static final String pileObjectName = "pile";
     private PileService pileService;
     private ModelMapper modelMapper;
 
@@ -45,10 +47,8 @@ public class PileController extends BaseController {
         PileViewModel pileViewModel = modelMapper.map(pileServiceModel, PileViewModel.class);
         pileViewModel.setUserUsername(pileServiceModel.getUser().getUsername());
         pileViewModel.setUserUserId(pileServiceModel.getUser().getId());
-
-        modelAndView.addObject(aceModeObjectName, AceMode.getAceModesList());
-        modelAndView.addObject(defaultTitleObjectName, pileId);
-        modelAndView.addObject(defaultLanguageObjectName, pileViewModel.getAceMode().getId());
+        pileViewModel.setAceModes(AceMode.getAceModesList());
+        modelAndView.addObject(pileObjectName,pileViewModel);
 
         return super.view("pile", modelAndView);
     }

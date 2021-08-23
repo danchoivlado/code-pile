@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,6 +17,7 @@ public class PileViewModel {
     private String id;
     private String title;
     private AceMode aceMode;
+    private List<AceMode> aceModes;
     private boolean readOnly;
     private String pileText;
     private String linkId;
