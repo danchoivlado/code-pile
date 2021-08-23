@@ -99,6 +99,14 @@ public class PileServiceImpl implements PileService {
         this.pileRepository.save(pile);
     }
 
+    @Override
+    public void changeEditorText(String pileId, String editorText) {
+        this.checkIfPileExistsWithId(pileId);
+        Pile pile = this.pileRepository.findPileById(pileId);
+        pile.setPileText(editorText);
+        this.pileRepository.save(pile);
+    }
+
     private void checkIfUserExistsWithUserName(String username) {
         boolean existsUserWithUsrername = this.userRepository.existsUserByUsername(username);
         if (!existsUserWithUsrername) {

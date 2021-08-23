@@ -52,4 +52,8 @@ public enum AceMode {
     public static List<AceMode> getAceModesList(){
         return ACE_MODES_LIST;
     }
+
+    public static List<AceMode> getAceModesListExceptModeWithId(String id){
+        return ACE_MODES_LIST.stream().filter(aceMode -> !aceMode.id.equals(id)).collect(Collectors.toList());
+    }
 }

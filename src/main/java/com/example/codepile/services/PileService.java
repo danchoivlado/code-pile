@@ -12,4 +12,5 @@ public interface PileService {
     void deletePileWithId(String pileId);
     void changeTitle(String pileId, String title);
     void changeLanguage(String pileId, String language);
+    void changeEditorText(String pileId, String editorText);
 }

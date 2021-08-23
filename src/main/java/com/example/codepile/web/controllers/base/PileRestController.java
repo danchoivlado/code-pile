@@ -1,6 +1,7 @@
 package com.example.codepile.web.controllers.base;
 
 import com.example.codepile.data.models.bodyModels.CheckUserExistsWithUsernameBody;
+import com.example.codepile.data.models.bodyModels.pile.ChangeEditorBody;
 import com.example.codepile.data.models.bodyModels.pile.ChangeLanguageBody;
 import com.example.codepile.data.models.bodyModels.pile.ChangeTitleBody;
 import com.example.codepile.services.PileService;
@@ -24,6 +25,20 @@ public class PileRestController {
     @PostMapping("/changeLanguage")
     public ResponseEntity<?> changeLanguage(@RequestBody ChangeLanguageBody body){
         this.pileService.changeLanguage(body.getPileId(), body.getLanguage());
+
+        return ResponseEntity.ok("");
+    }
+
+    @PostMapping("/changeTitle")
+    public ResponseEntity<?> changeTitle(@RequestBody ChangeTitleBody body){
+        this.pileService.changeTitle(body.getPileId(), body.getTitle());
+
+        return ResponseEntity.ok("");
+    }
+
+    @PostMapping("/changeEditorText")
+    public ResponseEntity<?> changeEditorText(@RequestBody ChangeEditorBody body){
+        this.pileService.changeEditorText(body.getPileId(), body.getEditorText());
 
         return ResponseEntity.ok("");
     }

@@ -47,7 +47,7 @@ public class PileController extends BaseController {
         PileViewModel pileViewModel = modelMapper.map(pileServiceModel, PileViewModel.class);
         pileViewModel.setUserUsername(pileServiceModel.getUser().getUsername());
         pileViewModel.setUserUserId(pileServiceModel.getUser().getId());
-        pileViewModel.setAceModes(AceMode.getAceModesList());
+        pileViewModel.setAceModes(AceMode.getAceModesListExceptModeWithId(pileViewModel.getAceMode().getId()));
         modelAndView.addObject(pileObjectName,pileViewModel);
 
         return super.view("pile", modelAndView);
