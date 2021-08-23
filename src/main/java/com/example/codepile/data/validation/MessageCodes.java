@@ -24,4 +24,7 @@ public final class MessageCodes {
     public static final String USER_USERNAME_NOTFOUND = "User with this username doesn't exists";
     public static final String USER_ID_NOTFOUND = "User with this ID doesn't exists";
     public static final String PASSWORD_DONT_MATCH = "Password is incorrect";
+
+    public static final String PILE_ID_NOTFOUND = "Pile with this id doesn't exists";
+
 }

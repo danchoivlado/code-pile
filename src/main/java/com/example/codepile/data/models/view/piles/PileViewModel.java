@@ -1,4 +1,4 @@
-package com.example.codepile.data.models.view;
+package com.example.codepile.data.models.view.piles;
 
 import com.example.codepile.data.entities.User;
 import com.example.codepile.data.enums.AceMode;
