@@ -1,25 +1,34 @@
 editor = ace.edit("editor");
+let ws;
+let stompClient;
+let subscriptionFor;
+
 $(document).ready(function () {
     pileLib.initEditorText();
-    if (($("#pile-owner").val() == "true") || ($("#pile-owner").val() == "false" && $("#pile-readonly").val() == "false")){
+    wbConfig.initWebSocket();
+    wbConfig.initStomp();
+    if (($("#pile-owner").val() == "true") || ($("#pile-owner").val() == "false" && $("#pile-readonly").val() == "false")) {
         pileLib.initListeners();
         console.log("initing listeners")
-    }else {
+        if ($("#pile-readonly").val() == "true") {
+            wbConfig.connectToWebSocket();
+        } else {
+            wbConfig.connectToWebSocketWithSubscriptions();
+        }
+    } else {
         pileLib.makeReadOnlyAllFields();
-
+        wbConfig.connectToWebSocketWithSubscriptions();
     }
-
 });
-//  = null;
+
 let pileLib = {
-    makeReadOnlyAllFields(){
+    makeReadOnlyAllFields() {
         $("#pile-language").attr("disabled", true);
         editor.setReadOnly(true);
         $("#pile-tittle").prop("readonly", true);
     },
 
-    initEditorText(){
-
+    initEditorText() {
         const editorText = $("#editor-text").val()
         editor.setValue(editorText);
     },
@@ -30,6 +39,7 @@ let pileLib = {
         })
         $("#pile-tittle").change(function (event) {
             saveTitleChange(this.value)
+            sendTitleToWs(this.value)
         })
 
         $("#editor").change(function (event) {
@@ -38,7 +48,39 @@ let pileLib = {
     }
 }
 
-function saveEditorTextChange(){
+function sendTitleToWs(title) {
+    const subscribtion = $("#pile-subscirber").val();
+    stompClient.send("/app/title/" + subscribtion, {}, JSON.stringify({'content': title}));
+}
+
+let wbConfig = {
+    initWebSocket() {
+        ws = new SockJS('/gs-guide-websocket')
+    },
+
+    initStomp() {
+        stompClient = Stomp.over(ws);
+    },
+    connectToWebSocketWithSubscriptions() {
+        const subscribtion = $("#pile-subscirber").val();
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe('/title/' + subscribtion, function (title) {
+                pileTitleChange(JSON.parse(title.body));
+            });
+        });
+    },
+
+    connectToWebSocket() {
+        stompClient.connect({}, function (frame) {
+        });
+    }
+}
+
+function pileTitleChange(title) {
+    $("#pile-tittle").val(title.content)
+}
+
+function saveEditorTextChange() {
     const token = $('input[name="_csrf"]').val();
 
     let data = {};
@@ -58,7 +100,7 @@ function saveEditorTextChange(){
     });
 }
 
-function saveTitleChange(title){
+function saveTitleChange(title) {
     const token = $('input[name="_csrf"]').val();
 
     let data = {};
