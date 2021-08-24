@@ -42,11 +42,21 @@
         <input type="hidden" id="pile-subscirber" th:if="${pile.readOnly} == true" th:value="${pile.userUserId}">
         <input type="hidden" id="pile-subscirber" th:unless="${pile.readOnly} == true" th:value="${pile.id}">
 
-        <button id="connect" class="btn btn-default" type="submit">Connect</button>
-        <button id="sub" class="btn btn-default" type="submit">Sub</button>
-
         <input type="hidden" th:value="${pile.pileText}" id="editor-text">
         <pre id="editor"></pre>
+
+        <div class="form-check">
+                <input class="form-check-input" type="radio" name="accessRadioButton" id="readOnlyRadioButton" th:checked="${pile.readOnly}">
+            <label class="form-check-label" for="readOnlyRadioButton">
+                Read Only
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="accessRadioButton" id="partyOnRadioButton" th:checked="${!pile.readOnly}">
+            <label class="form-check-label" for="partyOnRadioButton">
+                Party Mode
+            </label>
+        </div>
 
     </div>
 </main>

@@ -4,6 +4,10 @@ let stompClient;
 let subscriptionFor;
 
 $(document).ready(function () {
+    run();
+});
+
+function run(){
     pileLib.initEditorText();
     wbConfig.initWebSocket();
     wbConfig.initStomp();
@@ -19,7 +23,7 @@ $(document).ready(function () {
         pileLib.makeReadOnlyAllFields();
         wbConfig.connectToWebSocketWithSubscriptions();
     }
-});
+}
 
 let pileLib = {
     makeReadOnlyAllFields() {
@@ -50,7 +54,10 @@ let pileLib = {
 
 function sendTitleToWs(title) {
     const subscribtion = $("#pile-subscirber").val();
-    stompClient.send("/app/title/" + subscribtion, {}, JSON.stringify({'content': title}));
+    let titleObj ={};
+    titleObj["pileId"] = $("#pile-id").val();
+    titleObj["content"] = title;
+    stompClient.send("/app/title/" + subscribtion, {}, JSON.stringify( titleObj ));
 }
 
 let wbConfig = {

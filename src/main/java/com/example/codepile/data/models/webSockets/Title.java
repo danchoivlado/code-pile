@@ -1,5 +1,6 @@
 package com.example.codepile.data.models.webSockets;
 
+import com.example.codepile.data.models.webSockets.base.BasePileWebSocket;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Title {
+public class Title extends BasePileWebSocket {
     private String content;
 }

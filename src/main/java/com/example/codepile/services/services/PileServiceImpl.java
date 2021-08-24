@@ -129,7 +129,7 @@ public class PileServiceImpl implements PileService {
             if (pile.isReadOnly() == false) return true;
         } else {
             User user = this.userRepository.findUserByUsername(principal.getName());
-            if (pile.getUser().getId() == user.getId())
+            if (pile.getUser().getId().equals(user.getId()))
                 return true;
         }
         return false;
