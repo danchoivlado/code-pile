@@ -110,14 +110,28 @@ public class PileServiceImpl implements PileService {
 
     @Override
     public boolean isCurrentUserOwner(Principal principal, String pileUserId) {
-        if (principal == null){
+        if (principal == null) {
             return false;
         }
         String currentUserId = this.userRepository.findUserByUsername(principal.getName()).getId();
 
-        if(currentUserId.equals(pileUserId))
+        if (currentUserId.equals(pileUserId))
             return true;
 
+        return false;
+    }
+
+    @Override
+    public boolean canCurrentUserEdit(Principal principal, String pileId) {
+        this.checkIfPileExistsWithId(pileId);
+        Pile pile = this.pileRepository.findPileById(pileId);
+        if (principal == null) {
+            if (pile.isReadOnly() == false) return true;
+        } else {
+            User user = this.userRepository.findUserByUsername(principal.getName());
+            if (pile.getUser().getId() == user.getId())
+                return true;
+        }
         return false;
     }
 

@@ -16,4 +16,5 @@ public interface PileService {
     void changeLanguage(String pileId, String language);
     void changeEditorText(String pileId, String editorText);
     boolean isCurrentUserOwner(Principal principal, String pileUserId);
+    boolean canCurrentUserEdit(Principal principal, String pileId);
 }
