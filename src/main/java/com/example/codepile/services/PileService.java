@@ -5,6 +5,8 @@ import com.example.codepile.data.models.service.pile.PileCreateServiceModel;
 import com.example.codepile.data.models.service.pile.PileServiceModel;
 import com.example.codepile.data.models.view.piles.PileViewModel;
 
+import java.security.Principal;
+
 public interface PileService {
     PileServiceModel getPileWithId(String id);
     PileCreateServiceModel createPile(String byUserWithUsername);
@@ -13,4 +15,5 @@ public interface PileService {
     void changeTitle(String pileId, String title);
     void changeLanguage(String pileId, String language);
     void changeEditorText(String pileId, String editorText);
+    boolean isCurrentUserOwner(Principal principal, String pileUserId);
 }

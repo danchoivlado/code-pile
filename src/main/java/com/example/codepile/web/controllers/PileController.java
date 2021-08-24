@@ -8,6 +8,7 @@ import com.example.codepile.data.models.view.piles.MyPileViewModel;
 import com.example.codepile.data.models.view.piles.MyPilesViewModel;
 import com.example.codepile.data.models.view.piles.PileViewModel;
 import com.example.codepile.services.PileService;
+import com.example.codepile.services.UserService;
 import com.example.codepile.web.controllers.base.BaseController;
 import org.hibernate.property.access.internal.PropertyAccessStrategyNoopImpl;
 import org.modelmapper.ModelMapper;
@@ -24,7 +25,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@PreAuthorize("isAuthenticated()")
 @RequestMapping("/pile")
 public class PileController extends BaseController {
     private static final String aceModeObjectName = "aceModes";
@@ -41,6 +41,7 @@ public class PileController extends BaseController {
     }
 
     @GetMapping("/{pileId}")
+    @PreAuthorize("permitAll()")
     public ModelAndView getPile(Principal principal, ModelAndView modelAndView, @PathVariable() String pileId) {
         PileServiceModel pileServiceModel = this.pileService.getPileWithId(pileId);
 
@@ -48,17 +49,20 @@ public class PileController extends BaseController {
         pileViewModel.setUserUsername(pileServiceModel.getUser().getUsername());
         pileViewModel.setUserUserId(pileServiceModel.getUser().getId());
         pileViewModel.setAceModes(AceMode.getAceModesListExceptModeWithId(pileViewModel.getAceMode().getId()));
+        pileViewModel.setOwner(this.pileService.isCurrentUserOwner(principal, pileViewModel.getUserUserId()));
         modelAndView.addObject(pileObjectName,pileViewModel);
 
         return super.view("pile", modelAndView);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("")
     public ModelAndView createPile(Principal principal) {
         PileCreateServiceModel serviceModel = this.pileService.createPile(principal.getName());
         return super.redirect("/pile/" + serviceModel.getPileId());
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/my-piles")
     public ModelAndView getMyPiles(ModelAndView modelAndView, Principal principal) {
         MyPilesServiceViewModel myPilesServiceViewModel = this.pileService.getMyPiles(principal.getName());
@@ -73,6 +77,7 @@ public class PileController extends BaseController {
         return super.view("my-piles", modelAndView);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/delete/{pileId}")
     public ModelAndView deletePile(@PathVariable() String pileId) {
         this.pileService.deletePileWithId(pileId);

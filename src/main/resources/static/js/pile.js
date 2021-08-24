@@ -1,19 +1,33 @@
+editor = ace.edit("editor");
 $(document).ready(function () {
     pileLib.initEditorText();
-    pileLib.initListeners();
+    if (($("#pile-owner").val() == "true") || ($("#pile-owner").val() == "false" && $("#pile-readonly").val() == "false")){
+        pileLib.initListeners();
+        console.log("initing listeners")
+    }else {
+        pileLib.makeReadOnlyAllFields();
+
+    }
+
 });
 //  = null;
 let pileLib = {
+    makeReadOnlyAllFields(){
+        $("#pile-language").attr("disabled", true);
+        editor.setReadOnly(true);
+        $("#pile-tittle").prop("readonly", true);
+    },
+
     initEditorText(){
-        let editor = ace.edit("editor");
+
         const editorText = $("#editor-text").val()
         editor.setValue(editorText);
     },
+
     initListeners() {
         $("#pile-language").change(function (event) {
             saveLanguageChange(this.value)
         })
-
         $("#pile-tittle").change(function (event) {
             saveTitleChange(this.value)
         })
@@ -26,7 +40,6 @@ let pileLib = {
 
 function saveEditorTextChange(){
     const token = $('input[name="_csrf"]').val();
-    let editor = ace.edit("editor");
 
     let data = {};
     data['pileId'] = $("#pile-id").val();

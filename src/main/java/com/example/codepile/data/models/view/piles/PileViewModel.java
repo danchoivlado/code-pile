@@ -21,4 +21,5 @@ public class PileViewModel {
     private boolean readOnly;
     private String pileText;
     private String linkId;
+    private boolean owner;
 }

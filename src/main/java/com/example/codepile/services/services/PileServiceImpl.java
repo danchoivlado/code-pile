@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,6 +106,19 @@ public class PileServiceImpl implements PileService {
         Pile pile = this.pileRepository.findPileById(pileId);
         pile.setPileText(editorText);
         this.pileRepository.save(pile);
+    }
+
+    @Override
+    public boolean isCurrentUserOwner(Principal principal, String pileUserId) {
+        if (principal == null){
+            return false;
+        }
+        String currentUserId = this.userRepository.findUserByUsername(principal.getName()).getId();
+
+        if(currentUserId.equals(pileUserId))
+            return true;
+
+        return false;
     }
 
     private void checkIfUserExistsWithUserName(String username) {

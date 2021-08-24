@@ -111,6 +111,12 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.existsUserByUsername(username);
     }
 
+    @Override
+    public String getUserId(String username) {
+        this.checkIfUserExistsWithUserName(username);
+        return this.userRepository.findUserByUsername(username).getId();
+    }
+
 
     private void setEncodedPassword(UserServiceModel userServiceModel) {
         String passsword = userServiceModel.getPassword();

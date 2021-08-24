@@ -1,4 +1,4 @@
-package com.example.codepile.web.controllers.base;
+package com.example.codepile.web.controllers;
 
 import com.example.codepile.data.models.bodyModels.CheckUserExistsWithUsernameBody;
 import com.example.codepile.data.models.bodyModels.pile.ChangeEditorBody;
