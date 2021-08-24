@@ -135,6 +135,17 @@ public class PileServiceImpl implements PileService {
         return false;
     }
 
+    @Override
+    public boolean canCurrentUserChangeMode(Principal principal, String pileId) {
+        this.checkIfPileExistsWithId(pileId);
+        Pile pile = this.pileRepository.findPileById(pileId);
+        if (principal == null) return false;
+        User user = this.userRepository.findUserByUsername(principal.getName());
+        if (pile.getUser().getId().equals(user.getId()))
+            return true;
+        return false;
+    }
+
     private void checkIfUserExistsWithUserName(String username) {
         boolean existsUserWithUsrername = this.userRepository.existsUserByUsername(username);
         if (!existsUserWithUsrername) {

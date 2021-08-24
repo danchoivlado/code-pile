@@ -17,4 +17,5 @@ public interface PileService {
     void changeEditorText(String pileId, String editorText);
     boolean isCurrentUserOwner(Principal principal, String pileUserId);
     boolean canCurrentUserEdit(Principal principal, String pileId);
+    boolean canCurrentUserChangeMode(Principal principal, String pileId);
 }

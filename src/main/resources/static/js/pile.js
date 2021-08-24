@@ -7,10 +7,13 @@ $(document).ready(function () {
     run();
 });
 
-function run(){
+function run() {
     pileLib.initEditorText();
     wbConfig.initWebSocket();
     wbConfig.initStomp();
+    if ($("#pile-owner").val() == "false") {
+        pileLib.makeReadOnlyAccessModeFields()
+    }
     if (($("#pile-owner").val() == "true") || ($("#pile-owner").val() == "false" && $("#pile-readonly").val() == "false")) {
         pileLib.initListeners();
         console.log("initing listeners")
@@ -26,6 +29,12 @@ function run(){
 }
 
 let pileLib = {
+
+    makeReadOnlyAccessModeFields() {
+        $('input[type=radio][name=accessRadioButton]').attr('disabled', true);
+
+    },
+
     makeReadOnlyAllFields() {
         $("#pile-language").attr("disabled", true);
         editor.setReadOnly(true);
@@ -38,6 +47,10 @@ let pileLib = {
     },
 
     initListeners() {
+        $('input[type=radio][name=accessRadioButton]').change(function () {
+            changeMode(this.value)
+        })
+
         $("#pile-language").change(function (event) {
             saveLanguageChange(this.value)
         })
@@ -52,12 +65,20 @@ let pileLib = {
     }
 }
 
+function changeMode(mode) {
+    const subscribtion = $("#pile-subscirber").val();
+    let accessMode = {};
+    accessMode["pileId"] = $("#pile-id").val();
+    accessMode["readOnly"] = mode === "readOnly" ? true : false;
+    stompClient.send("/app/accessMode/" + subscribtion, {}, JSON.stringify(accessMode));
+}
+
 function sendTitleToWs(title) {
     const subscribtion = $("#pile-subscirber").val();
-    let titleObj ={};
+    let titleObj = {};
     titleObj["pileId"] = $("#pile-id").val();
     titleObj["content"] = title;
-    stompClient.send("/app/title/" + subscribtion, {}, JSON.stringify( titleObj ));
+    stompClient.send("/app/title/" + subscribtion, {}, JSON.stringify(titleObj));
 }
 
 let wbConfig = {
@@ -74,12 +95,23 @@ let wbConfig = {
             stompClient.subscribe('/title/' + subscribtion, function (title) {
                 pileTitleChange(JSON.parse(title.body));
             });
+            stompClient.subscribe('/accessMode/' + subscribtion, function (title) {
+                accessModeChange(JSON.parse(title.body));
+            });
         });
     },
 
     connectToWebSocket() {
         stompClient.connect({}, function (frame) {
         });
+    }
+}
+
+function accessModeChange(accessMode) {
+    if (accessMode.readOnly){
+        $("#readOnlyRadioButton").prop("checked", true);
+    }else {
+        $("#partyOnRadioButton").prop("checked", true);
     }
 }
 
