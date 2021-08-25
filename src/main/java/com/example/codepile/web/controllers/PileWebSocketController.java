@@ -1,13 +1,18 @@
 package com.example.codepile.web.controllers;
 
+import com.example.codepile.data.entities.Pile;
+import com.example.codepile.data.models.service.pile.ChangeAccessModeServiceModel;
 import com.example.codepile.data.models.webSockets.AccessMode;
+import com.example.codepile.data.models.webSockets.AccessModeResponse;
 import com.example.codepile.data.models.webSockets.Title;
 import com.example.codepile.error.pile.PileCannotBeEdited;
 import com.example.codepile.services.PileService;
+import org.modelmapper.ModelMapper;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.thymeleaf.standard.inline.StandardHTMLInliner;
 
 import java.security.Principal;
@@ -15,9 +20,11 @@ import java.security.Principal;
 @Controller
 public class PileWebSocketController {
     private PileService pileService;
+    private ModelMapper modelMapper;
 
-    public PileWebSocketController(PileService pileService) {
+    public PileWebSocketController(PileService pileService, ModelMapper modelMapper) {
         this.pileService = pileService;
+        this.modelMapper = modelMapper;
     }
 
     @MessageMapping("/title/{subscriber}")
@@ -29,9 +36,10 @@ public class PileWebSocketController {
 
     @MessageMapping("/accessMode/{subscriber}")
     @SendTo("/accessMode/{subscriber}")
-    public AccessMode title(@DestinationVariable String subscriber, AccessMode accessMode, Principal principal) throws InterruptedException {
+    public AccessModeResponse title(@DestinationVariable String subscriber, AccessMode accessMode, Principal principal) throws InterruptedException {
         this.checkIfUserCanChangeMode(principal, accessMode.getPileId());
-        return accessMode;
+        ChangeAccessModeServiceModel serviceModel = this.pileService.changeAccessMode(accessMode.isReadOnly(), accessMode.getPileId(), principal);
+        return modelMapper.map(serviceModel, AccessModeResponse.class);
     }
 
     private void checkIfUserCanChangeMode(Principal principal, String pileId){
@@ -44,4 +52,5 @@ public class PileWebSocketController {
         if(!this.pileService.canCurrentUserEdit(principal,pileId)){
             throw new PileCannotBeEdited("You can't edit this Pile");
         }
-    }}
+    }
+}

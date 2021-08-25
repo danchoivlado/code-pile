@@ -1,5 +1,6 @@
 package com.example.codepile.services;
 
+import com.example.codepile.data.models.service.pile.ChangeAccessModeServiceModel;
 import com.example.codepile.data.models.service.pile.MyPilesServiceViewModel;
 import com.example.codepile.data.models.service.pile.PileCreateServiceModel;
 import com.example.codepile.data.models.service.pile.PileServiceModel;
@@ -18,4 +19,5 @@ public interface PileService {
     boolean isCurrentUserOwner(Principal principal, String pileUserId);
     boolean canCurrentUserEdit(Principal principal, String pileId);
     boolean canCurrentUserChangeMode(Principal principal, String pileId);
+    ChangeAccessModeServiceModel changeAccessMode(boolean readOnly, String pileId, Principal principal);
 }

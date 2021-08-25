@@ -11,24 +11,35 @@ function run() {
     pileLib.initEditorText();
     wbConfig.initWebSocket();
     wbConfig.initStomp();
-    if ($("#pile-owner").val() == "false") {
-        pileLib.makeReadOnlyAccessModeFields()
-    }
-    if (($("#pile-owner").val() == "true") || ($("#pile-owner").val() == "false" && $("#pile-readonly").val() == "false")) {
-        pileLib.initListeners();
-        console.log("initing listeners")
-        if ($("#pile-readonly").val() == "true") {
-            wbConfig.connectToWebSocket();
-        } else {
-            wbConfig.connectToWebSocketWithSubscriptions();
-        }
-    } else {
-        pileLib.makeReadOnlyAllFields();
-        wbConfig.connectToWebSocketWithSubscriptions();
-    }
+    pileLib.configureSubscribersAndListeners()
+}
+
+function isReadOnlyEnabled() {
+    return $("#pile-readonly").val() == "true";
+}
+
+function isCurrentUserOwner() {
+    return $("#pile-owner").val() == "true";
 }
 
 let pileLib = {
+
+    configureSubscribersAndListeners() {
+        if (!isCurrentUserOwner()) {
+            pileLib.makeReadOnlyAccessModeFields()
+        }
+        if ((isCurrentUserOwner()) || (!isCurrentUserOwner() && !isReadOnlyEnabled())) {
+            pileLib.initListeners();
+            if (isReadOnlyEnabled()) {
+                wbConfig.connectToWebSocket();
+            } else {
+                wbConfig.connectToWebSocketWithSubscriptions();
+            }
+        } else {
+            pileLib.makeReadOnlyAllFields();
+            wbConfig.connectToWebSocketWithSubscriptions();
+        }
+    },
 
     makeReadOnlyAccessModeFields() {
         $('input[type=radio][name=accessRadioButton]').attr('disabled', true);
@@ -39,6 +50,12 @@ let pileLib = {
         $("#pile-language").attr("disabled", true);
         editor.setReadOnly(true);
         $("#pile-tittle").prop("readonly", true);
+    },
+
+    makeAccessibleAllField() {
+        $("#pile-language").attr("disabled", false);
+        editor.setReadOnly(false);
+        $("#pile-tittle").prop("readonly", false);
     },
 
     initEditorText() {
@@ -62,6 +79,13 @@ let pileLib = {
         $("#editor").change(function (event) {
             saveEditorTextChange()
         })
+    },
+
+    unbindListeners() {
+        $('input[type=radio][name=accessRadioButton]').unbind()
+        $("#pile-language").unbind()
+        $("#pile-tittle").unbind()
+        $("#editor").unbind()
     }
 }
 
@@ -82,6 +106,19 @@ function sendTitleToWs(title) {
 }
 
 let wbConfig = {
+
+    unsubscribeAll() {
+        for (const sub in stompClient.subscriptions) {
+            stompClient.unsubscribe(sub)
+        }
+    },
+
+    disconnectClient() {
+        stompClient.disconnect(function (s) {
+            console.log('disconnect')
+        });
+    },
+
     initWebSocket() {
         ws = new SockJS('/gs-guide-websocket')
     },
@@ -102,18 +139,46 @@ let wbConfig = {
     },
 
     connectToWebSocket() {
+        const subscribtion = $("#pile-subscirber").val();
         stompClient.connect({}, function (frame) {
+            stompClient.subscribe('/accessMode/' + subscribtion, function (title) {
+                accessModeChange(JSON.parse(title.body));
+            });
         });
     }
 }
 
 function accessModeChange(accessMode) {
-    if (accessMode.readOnly){
+    console.log(accessMode)
+    changeDependantInputs(accessMode)
+    pileLib.unbindListeners();
+    changeRadioButton(accessMode);
+    changeFields(accessMode)
+    wbConfig.unsubscribeAll()
+    wbConfig.disconnectClient()
+    run()
+}
+
+function changeFields(accessMode) {
+    if (!accessMode.readOnly) {
+        pileLib.makeAccessibleAllField();
+    }
+}
+
+function changeDependantInputs(accessMode) {
+    $("#pile-readonly").val(accessMode.readOnly)
+    $("#pile-subscirber").val(accessMode.subscription)
+}
+
+function changeRadioButton(accessMode) {
+
+    if (accessMode.readOnly) {
         $("#readOnlyRadioButton").prop("checked", true);
-    }else {
+    } else {
         $("#partyOnRadioButton").prop("checked", true);
     }
 }
+
 
 function pileTitleChange(title) {
     $("#pile-tittle").val(title.content)

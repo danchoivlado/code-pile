@@ -4,10 +4,7 @@ import com.example.codepile.data.entities.Pile;
 import com.example.codepile.data.entities.User;
 import com.example.codepile.data.enums.AceMode;
 import com.example.codepile.data.factories.PileFactory;
-import com.example.codepile.data.models.service.pile.MyPileServiceViewModel;
-import com.example.codepile.data.models.service.pile.MyPilesServiceViewModel;
-import com.example.codepile.data.models.service.pile.PileCreateServiceModel;
-import com.example.codepile.data.models.service.pile.PileServiceModel;
+import com.example.codepile.data.models.service.pile.*;
 import com.example.codepile.data.models.view.piles.PileViewModel;
 import com.example.codepile.data.repositories.PileRepository;
 import com.example.codepile.data.repositories.UserRepository;
@@ -144,6 +141,21 @@ public class PileServiceImpl implements PileService {
         if (pile.getUser().getId().equals(user.getId()))
             return true;
         return false;
+    }
+
+    @Override
+    public ChangeAccessModeServiceModel changeAccessMode(boolean readOnly, String pileId, Principal principal) {
+        Pile pile = this.pileRepository.findPileById(pileId);
+        pile.setReadOnly(readOnly);
+        this.pileRepository.save(pile);
+        ChangeAccessModeServiceModel serviceModel = new ChangeAccessModeServiceModel();
+        User user = this.userRepository.findUserByUsername(principal.getName());
+        serviceModel.setOwner(user.getId().equals(pile.getUser().getId())? true : false);
+        serviceModel.setSubscription(readOnly == true ? pile.getUser().getId() : pileId);
+        serviceModel.setReadOnly(readOnly);
+
+
+        return serviceModel;
     }
 
     private void checkIfUserExistsWithUserName(String username) {
