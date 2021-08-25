@@ -46,7 +46,7 @@ let pileLib = {
 
     },
 
-    makeReadOnlyAllFields() {
+        makeReadOnlyAllFields() {
         $("#pile-language").attr("disabled", true);
         editor.setReadOnly(true);
         $("#pile-tittle").prop("readonly", true);
@@ -69,10 +69,9 @@ let pileLib = {
         })
 
         $("#pile-language").change(function (event) {
-            saveLanguageChange(this.value)
+            sendLanguageToWs(this.value)
         })
         $("#pile-tittle").change(function (event) {
-            saveTitleChange(this.value)
             sendTitleToWs(this.value)
         })
 
@@ -132,9 +131,13 @@ let wbConfig = {
             stompClient.subscribe('/title/' + subscribtion, function (title) {
                 pileTitleChange(JSON.parse(title.body));
             });
+            stompClient.subscribe('/language/' + subscribtion, function (title) {
+                pileLanguageChange(JSON.parse(title.body));
+            });
             stompClient.subscribe('/accessMode/' + subscribtion, function (title) {
                 accessModeChange(JSON.parse(title.body));
             });
+
         });
     },
 
@@ -184,6 +187,11 @@ function pileTitleChange(title) {
     $("#pile-tittle").val(title.content)
 }
 
+function pileLanguageChange(language) {
+    $("#pile-language").val(language.content)
+    editorLib.setMode(language.content)
+}
+
 function saveEditorTextChange() {
     const token = $('input[name="_csrf"]').val();
 
@@ -204,45 +212,10 @@ function saveEditorTextChange() {
     });
 }
 
-function saveTitleChange(title) {
-    const token = $('input[name="_csrf"]').val();
-
-    let data = {};
-    data['pileId'] = $("#pile-id").val();
-    data['title'] = title;
-
-    $.ajax({
-        type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-CSRF-TOKEN', token);
-        },
-        contentType: "application/json",
-        url: "/api/pile/changeTitle",
-        data: JSON.stringify(data),
-        dataType: 'json',
-        cache: false,
-        timeout: 600000
-    });
-}
-
-
-function saveLanguageChange(selectedLanguage) {
-    const token = $('input[name="_csrf"]').val();
-
-    let data = {};
-    data['pileId'] = $("#pile-id").val();
-    data['language'] = selectedLanguage
-
-    $.ajax({
-        type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-CSRF-TOKEN', token);
-        },
-        contentType: "application/json",
-        url: "/api/pile/changeLanguage",
-        data: JSON.stringify(data),
-        dataType: 'json',
-        cache: false,
-        timeout: 600000
-    });
+function sendLanguageToWs(selectedLanguage){
+    const subscribtion = $("#pile-subscirber").val();
+    let languageObj = {};
+    languageObj["pileId"] = $("#pile-id").val();
+    languageObj["content"] = selectedLanguage;
+    stompClient.send("/app/language/" + subscribtion, {}, JSON.stringify(languageObj));
 }

@@ -4,6 +4,7 @@ import com.example.codepile.data.entities.Pile;
 import com.example.codepile.data.models.service.pile.ChangeAccessModeServiceModel;
 import com.example.codepile.data.models.webSockets.AccessMode;
 import com.example.codepile.data.models.webSockets.AccessModeResponse;
+import com.example.codepile.data.models.webSockets.Language;
 import com.example.codepile.data.models.webSockets.Title;
 import com.example.codepile.error.pile.PileCannotBeEdited;
 import com.example.codepile.services.PileService;
@@ -27,10 +28,19 @@ public class PileWebSocketController {
         this.modelMapper = modelMapper;
     }
 
+    @MessageMapping("/language/{subscriber}")
+    @SendTo("/language/{subscriber}")
+    public Language title(@DestinationVariable String subscriber, Language language, Principal principal) throws InterruptedException {
+        this.checkIfUserCanEdit(principal, language.getPileId());
+        this.pileService.changeLanguage(language.getPileId(), language.getContent());
+        return language;
+    }
+
     @MessageMapping("/title/{subscriber}")
     @SendTo("/title/{subscriber}")
     public Title title(@DestinationVariable String subscriber, Title titleObj, Principal principal) throws InterruptedException {
         this.checkIfUserCanEdit(principal, titleObj.getPileId());
+        this.pileService.changeTitle(titleObj.getPileId(), titleObj.getContent());
         return titleObj;
     }
 
