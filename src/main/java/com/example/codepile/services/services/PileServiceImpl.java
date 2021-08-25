@@ -122,8 +122,8 @@ public class PileServiceImpl implements PileService {
     public boolean canCurrentUserEdit(Principal principal, String pileId) {
         this.checkIfPileExistsWithId(pileId);
         Pile pile = this.pileRepository.findPileById(pileId);
-        if (principal == null) {
-            if (pile.isReadOnly() == false) return true;
+        if (pile.isReadOnly() == false) {
+            return true;
         } else {
             User user = this.userRepository.findUserByUsername(principal.getName());
             if (pile.getUser().getId().equals(user.getId()))
