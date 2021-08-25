@@ -2,10 +2,7 @@ package com.example.codepile.web.controllers;
 
 import com.example.codepile.data.entities.Pile;
 import com.example.codepile.data.models.service.pile.ChangeAccessModeServiceModel;
-import com.example.codepile.data.models.webSockets.AccessMode;
-import com.example.codepile.data.models.webSockets.AccessModeResponse;
-import com.example.codepile.data.models.webSockets.Language;
-import com.example.codepile.data.models.webSockets.Title;
+import com.example.codepile.data.models.webSockets.*;
 import com.example.codepile.error.pile.PileCannotBeEdited;
 import com.example.codepile.services.PileService;
 import org.modelmapper.ModelMapper;
@@ -26,6 +23,14 @@ public class PileWebSocketController {
     public PileWebSocketController(PileService pileService, ModelMapper modelMapper) {
         this.pileService = pileService;
         this.modelMapper = modelMapper;
+    }
+
+    @MessageMapping("/editorText/{subscriber}")
+    @SendTo("/editorText/{subscriber}")
+    public Editor title(@DestinationVariable String subscriber, Editor editor, Principal principal) throws InterruptedException {
+        this.checkIfUserCanEdit(principal, editor.getPileId());
+        this.pileService.changeEditorText(editor.getPileId(), editor.getContent());
+        return editor;
     }
 
     @MessageMapping("/language/{subscriber}")

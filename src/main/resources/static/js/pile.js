@@ -43,7 +43,6 @@ let pileLib = {
 
     makeReadOnlyAccessModeFields() {
         $('input[type=radio][name=accessRadioButton]').attr('disabled', true);
-
     },
 
         makeReadOnlyAllFields() {
@@ -76,7 +75,7 @@ let pileLib = {
         })
 
         $("#editor").change(function (event) {
-            saveEditorTextChange()
+            sendEditorTextChange()
         })
     },
 
@@ -137,7 +136,9 @@ let wbConfig = {
             stompClient.subscribe('/accessMode/' + subscribtion, function (title) {
                 accessModeChange(JSON.parse(title.body));
             });
-
+            stompClient.subscribe('/editorText/' + subscribtion, function (title) {
+                editorTextChange(JSON.parse(title.body));
+            });
         });
     },
 
@@ -149,6 +150,11 @@ let wbConfig = {
             });
         });
     }
+}
+
+function editorTextChange(editorText){
+    editor.setValue(editorText.content);
+    $("#editor-text").val(editorText.content)
 }
 
 function accessModeChange(accessMode) {
@@ -192,24 +198,13 @@ function pileLanguageChange(language) {
     editorLib.setMode(language.content)
 }
 
-function saveEditorTextChange() {
-    const token = $('input[name="_csrf"]').val();
-
-    let data = {};
-    data['pileId'] = $("#pile-id").val();
-    data['editorText'] = editor.getValue();
-    $.ajax({
-        type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-CSRF-TOKEN', token);
-        },
-        contentType: "application/json",
-        url: "/api/pile/changeEditorText",
-        data: JSON.stringify(data),
-        dataType: 'json',
-        cache: false,
-        timeout: 600000
-    });
+function sendEditorTextChange(){
+    $("#editor-text").val(editor.getValue())
+    const subscribtion = $("#pile-subscirber").val();
+    let editorObj = {};
+    editorObj["pileId"] = $("#pile-id").val();
+    editorObj["content"] = editor.getValue();
+    stompClient.send("/app/editorText/" + subscribtion, {}, JSON.stringify(editorObj));
 }
 
 function sendLanguageToWs(selectedLanguage){
