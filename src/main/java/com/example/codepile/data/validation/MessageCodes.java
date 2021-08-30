@@ -27,4 +27,6 @@ public final class MessageCodes {
 
     public static final String PILE_ID_NOTFOUND = "Pile with this id doesn't exists";
 
+    public static final String AUTHORITY_ID_NOTFOUND = "Authority with this id doesn't exists";
+
 }

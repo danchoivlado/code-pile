@@ -36,7 +36,6 @@ public enum Authority implements GrantedAuthority {
         role = ROLE_PREFIX + name();
     }
 
-
     public static Authority fromId(String id) {
         return STRING_TO_ENUM.get(id);
     }

@@ -8,7 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.UUID;
 
-@Setter(AccessLevel.PRIVATE)
+@Setter
 @Getter
 @MappedSuperclass
 public abstract class BaseUuidEntity {

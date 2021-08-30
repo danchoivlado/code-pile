@@ -1,5 +1,6 @@
 package com.example.codepile.web.controllers;
 
+import com.example.codepile.error.authority.AuthorityNotFoundException;
 import com.example.codepile.error.base.BaseException;
 import com.example.codepile.error.pile.PileCannotBeEdited;
 import com.example.codepile.error.pile.PileNotFoundException;
@@ -25,7 +26,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             UserNotFoundException.class,
-            PileNotFoundException.class})
+            PileNotFoundException.class,
+            AuthorityNotFoundException.class})
     public ModelAndView handleNotFoundExceptions(BaseException exception){
         return this.fillModelAndView(exception.getCode(),exception.getMessage());
     }
