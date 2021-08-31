@@ -1,5 +1,6 @@
 package com.example.codepile.services.services;
 
+import com.example.codepile.data.converters.AceConverter;
 import com.example.codepile.data.entities.Pile;
 import com.example.codepile.data.entities.User;
 import com.example.codepile.data.enums.AceMode;
@@ -93,7 +94,8 @@ public class PileServiceImpl implements PileService {
     public void changeLanguage(String pileId, String language) {
         this.checkIfPileExistsWithId(pileId);
         Pile pile = this.pileRepository.findPileById(pileId);
-        pile.setAceMode(AceMode.fromId(language));
+        AceConverter aceConverter = new AceConverter();
+        pile.setAceMode(aceConverter.convertToEntityAttribute(language));
         this.pileRepository.save(pile);
     }
 

@@ -39,9 +39,6 @@ class UserServiceImplTest extends ServiceTestBase {
     @Autowired
     UserService service;
 
-    @Autowired
-    PasswordEncoder encoder;
-
     @Test
     void loadUserByUsername_WhenUserExistsWithUserName_ShouldReturnUserDetails() {
         String searchedUserWithUsername = "user";

@@ -29,4 +29,6 @@ public final class MessageCodes {
 
     public static final String AUTHORITY_ID_NOTFOUND = "Authority with this id doesn't exists";
 
+    public static final String ACE_ID_NOTFOUND = "Ace with this id doesn't exists";
+
 }
